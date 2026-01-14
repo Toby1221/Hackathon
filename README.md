@@ -1,16 +1,26 @@
-# React + Vite
+# ARC_TACTICAL_OS // WORK IN PROGESS
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A high-performance tactical HUD and map interface designed for the ARC Raiders universe. This system provides real-time intel, loot analytics, and geographical data.
 
-Currently, two official plugins are available:
+## 🚀 Features
+- **Tactical Map Interface:** Full zoom-and-pan capability with rarity-coded Points of Interest (POI).
+- **Loot Analytics:** Live-simulated drop probability projections for all cataloged gear.
+- **Data Archive:** Detailed technical specifications and lore for every item.
+- **Live Sync:** Real-time UTC clock and coordinate tracking system.
+- **OS Aesthetic:** High-contrast, monospace terminal interface optimized for mission-critical operations.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠️ Installation & Setup
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/Toby1221/Hackathon.git](https://github.com/Toby1221/Hackathon.git)
+   npm install
+   npm start
 
-## React Compiler
+## 📊 Data Attribution
+    In accordance with the data usage requirements:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+    Data provided by RaidTheory ARC Raiders Data
+    https://github.com/RaidTheory/arcraiders-data
+    
+    Support and mapping provided by ArcTracker.io
+    https://arctracker.io
