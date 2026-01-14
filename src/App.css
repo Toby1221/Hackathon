@@ -1,0 +1,124 @@
+/* GLOBAL CSS VARIABLES */
+:root {
+  --neon: #00ffaa;
+  --bg: #050607;
+  --panel: #0d0f11;
+  --border: #1f2225;
+}
+
+/* LAYOUT RESET & WINDOW FIT */
+html, body { 
+  margin: 0; padding: 0; width: 100vw; height: 100vh; 
+  background: var(--bg); color: #fff; font-family: 'Share Tech Mono', monospace; 
+  overflow: hidden; 
+}
+
+/* ARC HUD FORMATTING */
+.arc-hud { width: 100vw; height: 100vh; display: flex; flex-direction: column; }
+
+/* HEADER */
+.hud-header {
+  height: 60px; background: #000; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; padding: 0 20px; flex-shrink: 0;
+}
+.header-left, .header-right { display: flex; align-items: center; gap: 15px; }
+
+/* TOGGLE BUTTONS */
+.toggle-group { display: flex; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.toggle-group button { 
+  background: none; border: none; color: #444; padding: 8px 20px; cursor: pointer; font-size: 0.65rem;
+  border-right: 1px solid var(--border); font-family: inherit;
+}
+.toggle-group button:last-child { border-right: none; }
+.toggle-group button.active { background: var(--neon); color: #000; font-weight: bold; }
+
+/* MAIN CONTENT */
+.hud-main { display: flex; flex: 1; min-height: 0; }
+
+/* VIEWPORT & MAP */
+.display-viewport { flex: 1; display: flex; flex-direction: column; background: #000; overflow: hidden; position: relative; }
+.map-tabs-full { display: flex; width: 100%; background: #080808; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.map-tabs-full button { flex: 1; background: none; border: none; border-right: 1px solid var(--border); color: #444; font-size: 0.55rem; padding: 12px; cursor: pointer; font-family: inherit; }
+.map-tabs-full button.active { color: var(--neon); background: rgba(0,255,170,0.05); border-bottom: 2px solid var(--neon); }
+
+/* MAP FRAME AND MOVEMENT */
+.map-frame { 
+  flex: 1; 
+  position: relative; 
+  overflow: hidden; 
+  cursor: crosshair;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.map-move-layer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+  transition: transform 0.1s ease-out;
+}
+
+/* MAP REFERENCE IMAGE */
+.map-ref {
+  position: relative;
+  display: inline-block;
+}
+
+/* MAP IMAGE STYLES */
+.map-img-standard { 
+  display: block; 
+  max-width: 100%; 
+  max-height: calc(100vh - 120px); 
+  object-fit: contain; 
+  filter: brightness(0.4) sepia(100%) hue-rotate(100deg); 
+  pointer-events: none; 
+}
+
+/* POI & RARITY */
+.poi { position: absolute; width: 8px; height: 8px; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; z-index: 5; }
+
+/* ZOOM CONTROLS */
+.zoom-controls {
+  position: absolute; right: 20px; top: 50%; transform: translateY(-50%); z-index: 100;
+  display: flex; flex-direction: column; align-items: center; gap: 15px;
+  background: rgba(0, 0, 0, 0.8); padding: 15px 8px; border: 1px solid var(--border); border-radius: 4px;
+}
+.mode-btn { background: none; border: 1px solid #333; color: #666; font-family: inherit; font-size: 0.5rem; padding: 5px; cursor: pointer; width: 100%; }
+.mode-btn.manual { border-color: var(--neon); color: var(--neon); }
+.slider-wrapper { display: flex; flex-direction: column; align-items: center; height: 180px; }
+.zoom-label { font-size: 0.5rem; color: var(--neon); margin-bottom: 8px; }
+.vertical-slider { -webkit-appearance: slider-vertical; width: 8px; height: 100%; background: #111; outline: none; cursor: pointer; }
+
+/* SIDEBAR */
+.intel-sidebar { width: 280px; background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+.search-box { padding: 12px; border-bottom: 1px solid var(--border); background: #000; }
+.search-box input { width: 100%; background: #080808; border: 1px solid #222; color: var(--neon); padding: 8px; font-family: inherit; font-size: 0.7rem; outline: none; }
+.scroll-list { flex: 1; overflow-y: auto; }
+.row { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.02); cursor: pointer; border-right: 0px solid transparent; }
+.row.active { background: rgba(255, 255, 255, 0.05); border-right-style: solid; border-right-width: 4px; }
+.row .n { display: block; font-size: 0.7rem; font-weight: bold; }
+.row .t { font-size: 0.55rem; color: #555; text-transform: uppercase; }
+
+/* ARCHIVE & NEW STATS */
+.archive-panel { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px; }
+.data-detail { width: 100%; max-width: 500px; background: #000; border: 1px solid var(--border); padding: 35px; border-top: 4px solid var(--neon); }
+.rarity { font-size: 0.6rem; letter-spacing: 2px; font-weight: bold; }
+.detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.projection-tag { font-size: 0.5rem; background: rgba(255, 255, 255, 0.05); padding: 2px 6px; border: 1px solid #222; color: var(--neon); letter-spacing: 1px; }
+.intel-stats { display: flex; gap: 30px; margin: 25px 0; padding: 20px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.stat-item label { display: block; font-size: 0.5rem; color: #444; margin-bottom: 8px; letter-spacing: 1px; }
+.stat-item .value { font-size: 1.4rem; font-weight: bold; font-family: 'Share Tech Mono', monospace; }
+.data-detail h1 { margin: 0; font-size: 2rem; letter-spacing: -1px; line-height: 1; }
+.data-detail p { color: #888; line-height: 1.6; font-size: 0.9rem; margin: 20px 0; }
+.footer-meta { font-size: 0.5rem; color: #333; border-top: 1px solid #111; padding-top: 15px; margin-top: 20px; }
+
+/* UTILITIES */
+.utc-clock { font-size: 0.7rem; color: var(--neon); font-weight: bold; }
+.coord-box { font-size: 0.55rem; color: #444; }
+.blink { animation: blinker 2s linear infinite; color: var(--neon); margin-right: 5px; }
+@keyframes blinker { 50% { opacity: 0; } }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #222; }
+::-webkit-scrollbar-thumb:hover { background: var(--neon); }
