@@ -21,7 +21,8 @@ html, body {
   height: 60px; background: #000; border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between; padding: 0 20px; flex-shrink: 0;
 }
-.header-left, .header-right { display: flex; align-items: center; gap: 15px; }
+.header-left { display: flex; align-items: center; gap: 15px; }
+.header-right { display: flex; align-items: center; gap: 20px; }
 
 /* TOGGLE BUTTONS */
 .toggle-group { display: flex; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
@@ -88,7 +89,14 @@ html, body {
 .mode-btn.manual { border-color: var(--neon); color: var(--neon); }
 .slider-wrapper { display: flex; flex-direction: column; align-items: center; height: 180px; }
 .zoom-label { font-size: 0.5rem; color: var(--neon); margin-bottom: 8px; }
-.vertical-slider { -webkit-appearance: slider-vertical; width: 8px; height: 100%; background: #111; outline: none; cursor: pointer; }
+.vertical-slider {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  width: 12px;
+  height: 100%;
+  cursor: pointer;
+  appearance: auto;
+}
 
 /* SIDEBAR */
 .intel-sidebar { width: 280px; background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
@@ -146,4 +154,46 @@ html, body {
 .sidebar-attribution a:hover {
   opacity: 1;
   text-decoration: underline;
+}
+
+/* EVENT STYLING */
+.event-display {
+  display: flex;
+  gap: 10px;
+}
+.event-tag {
+  padding: 4px 10px;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.major-alert {
+  color: #ffaa00; /* Gold/Amber for Major Events */
+  border-color: rgba(255, 170, 0, 0.4);
+  box-shadow: inset 0 0 5px rgba(255, 170, 0, 0.1);
+}
+.minor-status {
+  color: #888;
+  border-color: #222;
+}
+.event-dot {
+  width: 6px;
+  height: 6px;
+  background: #ffaa00;
+  border-radius: 50%;
+  margin-right: 8px;
+  animation: blinker 1.5s infinite;
+}
+
+/* UTC CLOCK FORMATTING */
+.utc-clock {
+  color: var(--neon);
+  font-weight: bold;
+  border-left: 1px solid var(--border);
+  padding-left: 20px;
 }

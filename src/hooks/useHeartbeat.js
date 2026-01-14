@@ -4,9 +4,10 @@ import { fetchIntel } from '../services/api';
 
 // Function to refresh data at regular intervals
 export function useHeartbeat(seconds = 30) {
-  // States to hold fetched data and timer
+  // States to hold fetched data and timer and sync time
   const [data, setData] = useState(null);
   const [timer, setTimer] = useState(seconds);
+  const [lastSyncTime, setLastSyncTime] = useState(null);
 
   // Async function to fetch data and reset timer
   const refresh = async () => {
@@ -15,7 +16,13 @@ export function useHeartbeat(seconds = 30) {
     // If data is fetched successfully, update state and reset timer
     if (result) {
       setData(result);
-      setTimer(seconds); 
+      setTimer(seconds);
+      
+      const now = new Date();
+      const timestamp = now.getUTCHours().toString().padStart(2, '0') + ":" + 
+                        now.getUTCMinutes().toString().padStart(2, '0') + ":" + 
+                        now.getUTCSeconds().toString().padStart(2, '0');
+      setLastSyncTime(timestamp);
     }
   };
 
@@ -39,5 +46,5 @@ export function useHeartbeat(seconds = 30) {
   }, []);
 
   // Return the fetched data and current timer value
-  return { data, timer };
+  return { data, timer, lastSyncTime };
 }

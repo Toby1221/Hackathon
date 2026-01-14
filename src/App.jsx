@@ -7,7 +7,7 @@ import './App.css';
 // Main Application Component
 function App() {
   // Data state for heartbeat hook
-  const { data } = useHeartbeat(30);
+  const { data, lastSyncTime } = useHeartbeat(30);
   // Viewmode state for map or archive
   const [viewMode, setViewMode] = useState("map"); 
   // Zoom state for map interaction
@@ -28,12 +28,19 @@ function App() {
   const mapRef = useRef(null);
   // UTC Clock state
   const [time, setTime] = useState(new Date());
+  // Event States
+  const [eventData, setEventData] = useState(null);
+  const [activeEvents, setActiveEvents] = useState({ major: null, minor: null });
 
   // Load maps on component mount
   useEffect(() => {
     axios.get('/data/maps.json').then((res) => {
       setMaps(res.data);
       setActiveMap(res.data[0]);
+    });
+    // Load Events
+    axios.get('/data/map_events.json').then((res) => {
+      setEventData(res.data);
     });
   }, []);
 
@@ -42,6 +49,43 @@ function App() {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  // Calculates active events every second
+  useEffect(() => {
+  // Check if all data is present
+  if (!eventData || !activeMap || !eventData.schedule) return;
+  // Map ID adjustments
+  const idMap = {
+      "dam_battlegrounds": "dam-battleground",
+      "the_spaceport": "the-spaceport",
+      "buried_city": "buried-city",
+      "the_blue_gate": "blue-gate",
+      "stella_montis_upper": "stella-montis",
+      "stella_montis_lower": "stella-montis"
+    };
+  // Time Offset
+  const adjustedTime = new Date(time.getTime() - (30 * 60 * 1000));
+  const currentHour = adjustedTime.getUTCHours().toString();
+  const scheduleKey = idMap[activeMap.id];
+  const schedule = eventData.schedule[scheduleKey];
+  if (schedule) {
+    // Helper function to find the most recent event in the schedule
+    const findActiveEvent = (type) => {
+      const hours = Object.keys(schedule[type] || {}).map(Number).sort((a, b) => b - a);
+      // Find the largest hour that is less than or equal to currentHour
+      const activeHour = hours.find(h => h <= currentHour);
+      return activeHour !== undefined ? schedule[type][activeHour] : null;
+    };
+    const majKey = schedule.major ? schedule.major[currentHour] : null;
+    const minKey = schedule.minor ? schedule.minor[currentHour] : null;
+    setActiveEvents({
+      major: majKey ? eventData.eventTypes[majKey] : null,
+      minor: minKey ? eventData.eventTypes[minKey] : null
+    });
+  } else {
+    setActiveEvents({ major: null, minor: null });
+  }
+}, [time, activeMap, eventData]);
 
   // Generate projected loot percentage without modifying JSON
   const getProjectedRate = (item) => {
@@ -95,13 +139,6 @@ function App() {
     }
   };
 
-  // Helper to format UTC time
-  const formatUTCTime = (date) => {
-    const hours = date.getUTCHours().toString().padStart(2, '0');
-    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes} UTC`;
-  };
-
   // Render loading state if data or active map is not available
   if (!data || !activeMap) return <div className="loading">CONNECTING_TO_ARC_OS...</div>;
 
@@ -118,10 +155,31 @@ function App() {
           </div>
         </div>
 
-        {/* Header right section with UTC clock and coordinates */}
+        {/* Displays live event info */}
         <div className="header-right">
-          <div className="utc-clock">{formatUTCTime(time)}</div>
+          <div className="event-display">
+            {activeEvents.major && (
+              <div className="event-tag major-alert">
+                <span className="event-dot"></span>
+                {activeEvents.major.displayName.toUpperCase()}
+              </div>
+            )}
+            {activeEvents.minor && (
+              <div className="event-tag minor-status">
+                {activeEvents.minor.displayName.toUpperCase()}
+              </div>
+            )}
+          </div>
+          <div className="utc-clock">
+            {time.getUTCHours().toString().padStart(2, '0')}:
+            {time.getUTCMinutes().toString().padStart(2, '0')} UTC
+          </div>
           <div className="coord-box">LOC_{coords.x}/{coords.y}</div>
+        </div>
+        <div className="header-center">
+          <div className="refresh-stamp">
+            <span className="label">LAST_SYNC:</span> {lastSyncTime || "INITIALIZING..."}
+          </div>
         </div>
       </header>
 
@@ -155,6 +213,7 @@ function App() {
                         type="range" min="1" max="5" step="0.1" value={zoom} 
                         onChange={(e) => setZoom(parseFloat(e.target.value))}
                         className="vertical-slider"
+                        style={{ writingMode: 'vertical-lr', direction: 'rtl' }}
                       />
                     </div>
                   )}
