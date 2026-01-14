@@ -26,6 +26,8 @@ function App() {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const mapRef = useRef(null);
+  // UTC Clock state
+  const [time, setTime] = useState(new Date());
 
   // Load maps on component mount
   useEffect(() => {
@@ -33,6 +35,12 @@ function App() {
       setMaps(res.data);
       setActiveMap(res.data[0]);
     });
+  }, []);
+
+  // Update UTC clock every minute
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
   }, []);
 
   // Generate projected loot percentage without modifying JSON
@@ -87,6 +95,13 @@ function App() {
     }
   };
 
+  // Helper to format UTC time
+  const formatUTCTime = (date) => {
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes} UTC`;
+  };
+
   // Render loading state if data or active map is not available
   if (!data || !activeMap) return <div className="loading">CONNECTING_TO_ARC_OS...</div>;
 
@@ -105,7 +120,7 @@ function App() {
 
         {/* Header right section with UTC clock and coordinates */}
         <div className="header-right">
-          <div className="utc-clock">{new Date().getUTCHours().toString().padStart(2, '0')}:00 UTC</div>
+          <div className="utc-clock">{formatUTCTime(time)}</div>
           <div className="coord-box">LOC_{coords.x}/{coords.y}</div>
         </div>
       </header>
@@ -212,6 +227,13 @@ function App() {
                 <span className="t">{item.type}</span>
               </div>
             ))}
+          </div>
+
+          {/*Attribution for data */}
+          <div className="sidebar-attribution">
+            <p>DATA_SOURCE:</p>
+            <a href="https://github.com/RaidTheory/arcraiders-data" target="_blank" rel="noreferrer">RAID_THEORY</a>
+            <a href="https://arctracker.io" target="_blank" rel="noreferrer">ARCTRACKER.IO</a>
           </div>
         </aside>
       </main>

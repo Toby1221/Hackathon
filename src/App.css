@@ -122,3 +122,28 @@ html, body {
 ::-webkit-scrollbar-track { background: #000; }
 ::-webkit-scrollbar-thumb { background: #222; }
 ::-webkit-scrollbar-thumb:hover { background: var(--neon); }
+
+/* SIDEBAR ATTRIBUTION */
+.sidebar-attribution {
+  padding: 15px;
+  background: #000;
+  border-top: 1px solid var(--border);
+  font-size: 0.5rem;
+}
+.sidebar-attribution p {
+  color: #444;
+  margin: 0 0 5px 0;
+  letter-spacing: 1px;
+}
+.sidebar-attribution a {
+  display: block;
+  color: var(--neon);
+  text-decoration: none;
+  opacity: 0.6;
+  margin-bottom: 3px;
+  transition: opacity 0.2s;
+}
+.sidebar-attribution a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
