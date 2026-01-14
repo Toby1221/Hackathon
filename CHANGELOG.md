@@ -1,8 +1,18 @@
 # CHANGELOG // ARC_TACTICAL_OS
 
-All notable changes to this project will be documented in this file.
+## [1.4.0] - 2026-01-14
+### Added
+- **External API Integration:** Successfully integrated Steam Web API via `corsproxy.io` to fetch live player counts.
+- **Dual-Pulse Heartbeat:** Updated `useHeartbeat.js` to handle parallel internal and external API requests using `Promise.allSettled`.
+- **Raider Monitor:** Added `ACTIVE_RAIDERS` display in the header with neon status styling.
 
-## [4.0.0] - 2026-01-14
+### Fixed
+### Changed
+- Refactored `api.js` to serve as a clean internal intel service.
+- Improved header layout to accommodate sync timestamps and live population data.
+---
+
+## [1.3.0] - 2026-01-14
 ### Added
 - **Heartbeat Hook**: Implemented `useHeartbeat.js` to poll `fetchIntel` every 30 seconds.
 - **Sync Visualizer**: Added `LAST_SYNC` timestamp to the header center to track data freshness.
@@ -15,7 +25,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [3.0.0] - 2026-01-12
+## [1.2.0] - 2026-01-13
 ### Added
 - **Live Event System**: Introduced `map_events.json` integration to track Major and Minor world events.
 - **Event Display UI**: Added color-coded tags (Amber for Major, Gray for Minor) with blinking status dots.
@@ -26,7 +36,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [2.0.0] - 2026-01-08
+## [1.1.0] - 2026-01-13
 ### Added
 - **Tactical Zoom System**: Implemented "Fit" vs "Manual" zoom modes with a vertical range slider.
 - **Navigation Controls**: Added click-and-drag panning functionality for high-detail map inspection.
@@ -38,7 +48,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [1.0.0] - 2026-01-05
+## [1.0.0] - 2026-01-12
 ### Added
 - **Core HUD**: Initial build with basic layout and sidebar navigation.
 - **Map Viewer**: Support for multi-map switching (Dam, Spaceport, Buried City).

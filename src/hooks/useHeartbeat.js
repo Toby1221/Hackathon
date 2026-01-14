@@ -1,28 +1,52 @@
 // Import libraries
 import { useState, useEffect } from 'react';
 import { fetchIntel } from '../services/api';
+import axios from 'axios';
 
 // Function to refresh data at regular intervals
 export function useHeartbeat(seconds = 30) {
-  // States to hold fetched data and timer and sync time
+  // States to hold fetched data and timer and sync time and player count
   const [data, setData] = useState(null);
   const [timer, setTimer] = useState(seconds);
   const [lastSyncTime, setLastSyncTime] = useState(null);
+  const [playerCount, setPlayerCount] = useState(null);
 
   // Async function to fetch data and reset timer
   const refresh = async () => {
-    // Fetch data from API
-    const result = await fetchIntel();
-    // If data is fetched successfully, update state and reset timer
-    if (result) {
-      setData(result);
-      setTimer(seconds);
+    try {
+      // Fetch Map/Intel Data
+      const result = await fetchIntel();
+      if (result) {
+        setData(result);
+        
+        // Update Timestamp
+        const now = new Date();
+        const timestamp = now.getUTCHours().toString().padStart(2, '0') + ":" + 
+                          now.getUTCMinutes().toString().padStart(2, '0') + ":" + 
+                          now.getUTCSeconds().toString().padStart(2, '0');
+        setLastSyncTime(timestamp);
+      }
+
+      // App ID 1808500 is the official ARC Raiders retail ID
+      const STEAM_APP_ID = "1808500";
+      // Fetch Steam Player Count via corsproxy.io
+      const PROXY = "https://corsproxy.io/?";
+      const STEAM_URL = `https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=${STEAM_APP_ID}`;
       
-      const now = new Date();
-      const timestamp = now.getUTCHours().toString().padStart(2, '0') + ":" + 
-                        now.getUTCMinutes().toString().padStart(2, '0') + ":" + 
-                        now.getUTCSeconds().toString().padStart(2, '0');
-      setLastSyncTime(timestamp);
+      const steamRes = await axios.get(PROXY + encodeURIComponent(STEAM_URL));
+      
+      // If valid response, update player count
+      if (steamRes.data?.response?.player_count !== undefined) {
+        // Format with commas
+        setPlayerCount(steamRes.data.response.player_count.toLocaleString());
+      }
+      
+      // Reset the visual timer after a successful pulse
+      setTimer(seconds);
+
+      // Handle errors during the heartbeat process
+    } catch (err) {
+      console.error("HEARTBEAT_FAILURE:", err);
     }
   };
 
@@ -46,5 +70,5 @@ export function useHeartbeat(seconds = 30) {
   }, []);
 
   // Return the fetched data and current timer value
-  return { data, timer, lastSyncTime };
+  return { data, timer, lastSyncTime, playerCount };
 }

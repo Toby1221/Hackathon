@@ -7,7 +7,7 @@ import './App.css';
 // Main Application Component
 function App() {
   // Data state for heartbeat hook
-  const { data, lastSyncTime } = useHeartbeat(30);
+  const { data, timer, lastSyncTime, playerCount} = useHeartbeat(30);
   // Viewmode state for map or archive
   const [viewMode, setViewMode] = useState("map"); 
   // Zoom state for map interaction
@@ -152,6 +152,10 @@ function App() {
           <div className="toggle-group">
             <button className={viewMode === 'map' ? 'active' : ''} onClick={() => setViewMode('map')}>MAP</button>
             <button className={viewMode === 'archive' ? 'active' : ''} onClick={() => setViewMode('archive')}>DATA</button>
+          </div>
+          <div className="status-item">
+            <span className="label">ACTIVE_RAIDERS </span>
+            <span className="value">{playerCount || "CONNECTING..."}</span>
           </div>
         </div>
 

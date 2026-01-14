@@ -1,61 +1,47 @@
-# ARC_TACTICAL_OS // VERSION 4.0 // STILL WORK IN PROGRESS
+# ARC_TACTICAL_OS // HUD Interface
 
-A specialized tactical Head-Up Display (HUD) for ARC Raiders, providing real-time map intel, loot probability projections, and live event tracking synchronized with game server rotations.
+A real-time tactical dashboard designed for ARC Raiders. This interface provides live intel on map locations, loot probability projections, and global raider activity using a dual-pulse heartbeat synchronization system.
 
-## 📡 NEW IN V4.0
-* **Heartbeat System:** Automated 30-second data polling using a custom React hook to ensure intel remains current without manual refreshes.
-* **Live Event Tracker:** Dynamic major and minor event display (e.g., Night Raids, Launch Tower Loot) with a 30-minute UTC offset to match game-side rotation cycles.
-* **Sync Timestamp:** A "Last Sync" indicator positioned in the header center to verify data freshness.
-* **Historical Look-back Logic:** Event displays now persist based on the most recent scheduled start time, ensuring the HUD matches live trackers even between hour marks.
+## 🛠 Tech Stack
+- **Frontend:** React 18 / Vite
+- **Styling:** CSS3 (Tactical HUD / Cyberpunk aesthetic)
+- **Data Handling:** Axios with asynchronous parallel fetching
+- **API Services:** Dual-API Integration (Internal + External)
 
----
+## 📡 Architecture: The Dual-API System
+This project fulfills the 2 API requirement by separating static intelligence from live network population:
 
-## 🛠 CORE ARCHITECTURE
+1.  **Tactical Intel API (Internal):** - **Source:** `services/api.js`
+    - **Data:** Fetches `maps.json` and `map_events.json`.
+    - **Purpose:** Populates the interactive map with coordinates, rarity-scaled POIs, and the dynamic event schedule.
 
-### 1. Data Synchronization (`useHeartbeat.js`)
-The application uses a custom hook to manage data integrity. It maintains a 30-second countdown; upon reaching zero, it triggers a background fetch via the `fetchIntel` service to update item coordinates and descriptions.
+2.  **Global Population API (External):** - **Source:** Steam API (via `corsproxy.io`)
+    - **Data:** `GetNumberOfCurrentPlayers` for App ID 1808500.
+    - **Purpose:** Injects live concurrent player counts into the HUD to show all the Raiders Topside.
 
-### 2. Event Scheduling Logic
-The HUD calculates active events based on the game's specific rotation window:
-- **Offset Calculation:** $T_{adj} = T_{utc} - 30\text{ minutes}$
-- **Persistence Logic:** The system scans the `map_events.json` schedule for the highest hour key $h$ such that $h \le T_{adj}$. This ensures an event starting at 07:00 stays active until the next scheduled entry (e.g., 09:00 or 15:00) replaces it.
+## 🚀 Installation & Setup
 
-### 3. Navigation & Interaction
-* **Tactical Map:** Interactive layer with POI markers color-coded by rarity.
-* **Archive Mode:** Searchable database of all known intel items with simulated drop-rate projections.
-* **Coordinate Tracker:** Real-time $1000 \times 1000$ grid mapping based on cursor position relative to the map frame.
+1. Clone the repository:**
+   git clone [https://github.com/toby1221/hackathon.git](https://github.com/toby1221/hackathon.git)
+   cd arc-tactical-os
 
----
+2. Install dependencies:
+   npm install
 
-## 📁 PROJECT STRUCTURE
-src/
-├── hooks/
-│   └── useHeartbeat.js      # Handles 30s polling & sync timestamps
-├── services/
-│   └── api.js               # Axios interface for data fetching
-├── App.jsx                  # Main HUD logic, Event controller, & Map UI
-├── App.css                  # Tactical UI styling (Grid/Neon/Glassmorphism)
-public/
-└── data/
-    ├── maps.json            # Map metadata and IDs
-    └── map_events.json      # Major/Minor event schedules & types
+3. Run in development mode:
+   npm run dev
 
+4. Start OS
+   npm start
 
+🖥 Features
+- Interactive Map: Switch between Dam Battlegrounds, Buried City, and more with manual zoom/drag capabilities.
 
-🚀 INSTALLATION
-Clone the repository:
+- Heartbeat Sync: Visual 30-second countdown timer that refreshes all intelligence layers simultaneously.
 
-git clone [https://github.com/your-repo/arc-tactical-hud.git](https://github.com/your-repo/arc-tactical-hud.git)
+- Live Event Tracker: Auto-calculates Major and Minor world events based on UTC server time.
 
-Install dependencies:
+- Archive Database: Searchable intel database with simulated drop-rate probability algorithms.
 
-npm install
-
-Launch the HUD:
-
-npm start
-
-🔗 DATA SOURCES
-Intel Schema: Sourced from RaidTheory.
-Live Rotations: Time-mapping aligned with game-server cycles.
-SYSTEM NOTE: Version 4.0 requires the map_events.json file to be present in the public directory for the header event tags to initialize. If the sync timestamp displays "INITIALIZING..." indefinitely, check the console for API connection errors.
+⚖ License
+Distributed under the MIT License. Data provided by Raid Theory & ArcTracker.io.
